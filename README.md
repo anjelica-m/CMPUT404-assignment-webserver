@@ -25,3 +25,10 @@ examples thus some of the code is Copyright © 2001-2013 Python
 Software Foundation; All Rights Reserved under the PSF license (GPL
 compatible) http://docs.python.org/2/library/socketserver.html
 
+References
+========================
+
+Links below were accessed by Anjelica Marianicz for the assignment.
+
+*https://www.tutorialspoint.com/python/string_decode.htm
+*https://stackoverflow.com/questions/59014499/python-socket-how-to-properly-redirect-http-s-requests-using-the-same-socket-con
