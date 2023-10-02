@@ -27,15 +27,16 @@ import time
 
 # try: curl -v -X GET http://127.0.0.1:8080/
 '''
-        Example structure(s) of decoded:
 
+    Some output of print statements for personal reference
+    when understanding how to deal with the requests:
+        Example structure(s) of decoded:
         DECODED
         GET /hardcode/index.html HTTP/1.1
         Accept-Encoding: identity
         Host: 127.0.0.1:8080
         User-Agent: Python-urllib/3.8
         Connection: close
-
         DECODED
         PUT /base.css HTTP/1.1
         Accept-Encoding: identity
@@ -44,8 +45,8 @@ import time
         Host: 127.0.0.1:8080
         User-Agent: Python-urllib/3.8
         Connection: close
-'''
-'''
+
+        Example of how data looks before decoding:
         SECTIONS [b'GET', b'/base.css', b'HTTP/1.1', b'Accept-Encoding:', b'identity', b'Host:', 
         b'127.0.0.1:8080', b'User-Agent:', b'Python-urllib/3.8', b'Connection:', b'close']
 '''
@@ -59,16 +60,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        self.decoded = self.data.decode()
-        self.decoded = self.decoded.split()
+        self.decoded = self.data.decode() # Strings are given in byte format, need to decode them.
+        self.decoded = self.decoded.split() # Split the strings as they are all together.
         
         #print(list(time.localtime()))
         if len(self.decoded) > 0:
-            self.path = self.decoded[1]
+            self.path = self.decoded[1] # This is the method (i.e. GET, PUT, POST, etc.)
             if self.decoded[0] == 'GET':
                 self.try_get()
             else:
-                self.error_405()
+                self.error_405() # Cannot be handled by this server.
             
             self.request.sendall(bytearray(self.sending, 'utf-8'))
             self.request.close()
@@ -133,10 +134,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
         '''
 
         self.http_status_code = 404
-        self.content = 'Error 404 Page Not Found'
+        self.content = 'Error 404 Not Found'
         self.content_mime_type = 'text/html'
         
-        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE+"Connection: "+CLOSE +NEWLINE
+        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+"Connection: "+CLOSE +NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE
         
 
     def pass_200(self):
@@ -150,7 +151,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             #Fixed path :)
         else:
             self.content_mime_type = 'text/html'
-        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE#+"Connection: "+CLOSE +NEWLINE
+        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+"Connection: "+CLOSE +NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE
             
 
     def redirect_301(self):
@@ -161,7 +162,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         self.content_mime_type = 'text/html'
         self.http_status_code = 301
         self.location = self.path
-        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+'Location'+self.location+NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE#+"Connection: "+CLOSE +NEWLINE
+        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+"Connection: "+CLOSE +NEWLINE+'Location'+self.location+NEWLINE+'Content-Type: '+self.content_mime_type+NEWLINE+NEWLINE+self.content+NEWLINE
 
 
     def error_405(self):
@@ -169,10 +170,10 @@ class MyWebServer(socketserver.BaseRequestHandler):
         The request is attempting to use PUT, POST, etc.
         This server can only handle GET requests.
         '''
-        self.content = 'Unfortunately the server cannot handle this request.'
+        self.content = 'ERROR 405 Method Not Allowed.'
         self.content_type = 'text/html'
         self.http_status_code = 405
-        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+'Content-Type: '+self.content_type+NEWLINE+NEWLINE+self.content+NEWLINE+"Connection: "+CLOSE +NEWLINE
+        self.sending = self.decoded[2]+' '+ str(self.http_status_code)+NEWLINE+"Connection: "+CLOSE +NEWLINE+'Content-Type: '+self.content_type+NEWLINE+NEWLINE+self.content+NEWLINE
         
         
 
