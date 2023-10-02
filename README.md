@@ -30,5 +30,5 @@ References
 
 Links below were accessed by Anjelica Marianicz for the assignment.
 
-*https://www.tutorialspoint.com/python/string_decode.htm
-*https://stackoverflow.com/questions/59014499/python-socket-how-to-properly-redirect-http-s-requests-using-the-same-socket-con
+* https://www.tutorialspoint.com/python/string_decode.htm
+* https://stackoverflow.com/questions/59014499/python-socket-how-to-properly-redirect-http-s-requests-using-the-same-socket-con
